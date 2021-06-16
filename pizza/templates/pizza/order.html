@@ -1,0 +1,45 @@
+{% extends 'pizza/base.html' %}
+{% block 'body' %}
+
+{% load widget_tweaks %}
+
+<div class="container">
+
+  <h1>Order a Pizza</h1>
+
+  <h2>{{ note }}</h2>
+  {% if created_pizza_pk %}
+  <h2><a href="{% url 'edit_order' created_pizza_pk %}">Edit Your Order</a></h2>
+  {% endif %}
+
+
+  <!-- putting novalidate    in below from tag will just remove the default error which django gives if we not write any thing properly in the form-->
+
+
+  <form action="{% url 'order' %}" method="post">
+    {% csrf_token %}
+
+    {% for field in pizzaform %}
+
+    <!-- Adding .as_p will display the form as a paragraphs in the page-->
+    <!-- Adding .as_table will display form as a table but note here we need to add <table> tag -->
+    <!-- Adding .as_ul will display form as a unordered list but note here we need to add <ul> and if we want as ordered list use <ol> tag -->
+    <div class="form-group">
+      {{ field.error}}
+      {{field.label_tag}}
+      {% render_field field class="form-control" %}
+    </div>
+    {% endfor %}
+    <input type="submit" value="Order Pizza">
+  </form>
+
+  <br><br>
+  Want more than one pizza?
+  <form action="{% url 'pizzas' %}" method="get">
+    {% csrf_token %}
+    {{ multiple_form }}
+    <input type="submit" value="Get Pizzas">
+  </form>
+</div>
+
+{% endblock %}
